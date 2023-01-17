@@ -12,8 +12,6 @@ function formatdate(timestamp) {
 }
 
 function displayTemperature (response){
-    console.log(response.data);
-
     let temperatureElement = document.querySelector('#temperature');
     let cityElement = document.querySelector('#city');
     let descriptionElement = document.querySelector('#description');
@@ -36,8 +34,3 @@ let apiKey = "5b20511b045634b6ffabf3o8bcc547t7";
 let city = 'Lisbon'
 let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
 axios.get(apiUrl).then(displayTemperature);
-/*function getForecast(coordinates) {
-    let apiKey = "5f472b7acba333cd8a035ea85a0d4d4c";
-    let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
-    axios.get(apiUrl).then(displayForecast);
-  }*/
