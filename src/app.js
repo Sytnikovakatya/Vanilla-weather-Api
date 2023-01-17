@@ -20,17 +20,21 @@ function displayTemperature (response){
     let humidityElement = document.querySelector('#humidity');
     let windElement = document.querySelector('#wind');
     let dateElement = document.querySelector('#date');
+    let iconElement = document.querySelector('#icon');
 
     temperatureElement.innerHTML = Math.round(response.data.temperature.current);
     cityElement.innerHTML = response.data.city;
     descriptionElement.innerHTML = response.data.condition.description;
     humidityElement.innerHTML = response.data.temperature.humidity;
     windElement.innerHTML = Math.round(response.data.wind.speed);
-   dateElement.innerHTML = formatdate(response.data.time*1000);
-    
+    dateElement.innerHTML = formatdate(response.data.time*1000);
+    let conditionIcon = response.data.condition.icon;
+    iconElement.setAttribute('src', `http://shecodes-assets.s3.amazonaws.com/api/weather/icons/${conditionIcon}.png`);
+    iconElement.setAttribute('alt', response.data.condition.description)
 }
 let apiKey = "5b20511b045634b6ffabf3o8bcc547t7";
-let apiUrl = `https://api.shecodes.io/weather/v1/current?query=Lviv&key=${apiKey}&units=metric`;
+let city = 'Lisbon'
+let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
 axios.get(apiUrl).then(displayTemperature);
 /*function getForecast(coordinates) {
     let apiKey = "5f472b7acba333cd8a035ea85a0d4d4c";
