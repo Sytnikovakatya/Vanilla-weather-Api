@@ -1,5 +1,4 @@
 function formatdate(timestamp) {
-    //calculate the date
     let date = new Date(timestamp);
     let minutes = date.getMinutes();
     if(minutes < 10) {
@@ -30,11 +29,13 @@ function displayTemperature (response){
     iconElement.setAttribute('src', `http://shecodes-assets.s3.amazonaws.com/api/weather/icons/${conditionIcon}.png`);
     iconElement.setAttribute('alt', response.data.condition.description)
 }
+
 function search(city) {
     let apiKey = "5b20511b045634b6ffabf3o8bcc547t7";
     let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
     axios.get(apiUrl).then(displayTemperature);
 }
+
 function handleSubmit(event) {
     event.preventDefault();
     let cityInputelement = document.querySelector('#city-input');
