@@ -10,31 +10,49 @@ function formatdate(timestamp) {
     return `${day} ${hours}:${minutes}`;
 }
 
-function displayForecast() {
+function formatDay(timestamp) {
+    let date = new Date(timestamp*1000);
+    let day = date.getDay();
+    let days=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    return days[day];
+}
+
+function getForecast(city) {
+    let apiKey = "5b20511b045634b6ffabf3o8bcc547t7";
+    let apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}&units=metric`;
+    axios.get(apiUrl).then(displayForecast);
+}
+
+function displayForecast(response) {
+    let forecast = response.data.daily;
     let forecastElement = document.querySelector('#forecast');
     let forecastHTML = `<div class="row">`;
-    let days = ['Thu', 'Fri', 'Sat', 'Sun'];
-    days.forEach(function(day){
+    forecast.forEach(function(forecastDay,index){
+        if(index < 6 && index > 0){
         forecastHTML = forecastHTML + `
         <div class="col-2">
           <div class="weather-forecast-date">
-            ${day}
+            ${formatDay(forecastDay.time)}
           </div>
           <img
-            src="https://ssl.gstatic.com/onebox/weather/64/partly_cloudy.png"
-            alt=""
+            src="${forecastDay.condition.icon_url}"
+            alt="${forecastDay.condition.description}"
             width="36"
           />
           <div class="weather-forecast-temperature">
-            <span class="weather-forecast-max">18°</span>
-            <span class="weather-forecast-min">12°</span>
+            <span class="weather-forecast-max">${Math.round(forecastDay.temperature.maximum)}°</span>
+            <span class="weather-forecast-min">${Math.round(forecastDay.temperature.minimum)}°</span>
           </div>
       </div>`;
+      }
     })
     
     forecastHTML = forecastHTML + `</div>`
     forecastElement.innerHTML = forecastHTML;
 }
+
+
 
 function displayTemperature (response){
     let temperatureElement = document.querySelector('#temperature');
@@ -44,8 +62,6 @@ function displayTemperature (response){
     let windElement = document.querySelector('#wind');
     let dateElement = document.querySelector('#date');
     let iconElement = document.querySelector('#icon');
-
-    displayForecast()
 
     celsiusTemperature = response.data.temperature.current
 
@@ -57,7 +73,9 @@ function displayTemperature (response){
     dateElement.innerHTML = formatdate(response.data.time*1000);
     let conditionIcon = response.data.condition.icon;
     iconElement.setAttribute('src', `http://shecodes-assets.s3.amazonaws.com/api/weather/icons/${conditionIcon}.png`);
-    iconElement.setAttribute('alt', response.data.condition.description)
+    iconElement.setAttribute('alt', response.data.condition.description);
+
+    getForecast(response.data.city);
 }
 
 function search(city) {
@@ -103,3 +121,5 @@ let celsiusLink = document.querySelector('#celsius-link');
 celsiusLink.addEventListener('click', displayCelsiusTemperature);
 
 search('Paris');
+
+
